@@ -43,7 +43,7 @@ def init(): # have to run this first to get all data. Please avoid running it mu
 
 	# create population dictionary
 	population_mapping_dict = {}
-	adjustment_ratio = 328/305
+	adjustment_ratio = 328/323
 	for row in population:
 	    population_mapping_dict[tuple(county_mapping(row['fields']['county']))]= math.floor(row['fields']['total_population']*adjustment_ratio)
 
@@ -54,7 +54,7 @@ def init(): # have to run this first to get all data. Please avoid running it mu
 		mapping_dict[row['fields']['county']] = county_mapping(row['fields']['county'])
     # calculate  ratio
     # total_statics from us
-	usa_total_population = sum(population_mapping_dict.values())
+	usa_total_population = sum(population_mapping_dict.values())*(328/305)
 	usa_total_cases_11_16 = df[df['date'] == df['date'].max()]['tot_confirmed'].sum()
 	usa_total_deaths_11_16 = df[df['date'] == df['date'].max()]['tot_death'].sum()
 
@@ -95,7 +95,10 @@ def county_mapping(county_column):
 def y_label_generator(state, county, label_type, group_date = 300):
     label_list = None
     target_state = df[df['province_state'] == state] 
-    target_county = target_state[ target_state['admin2'] == county]
+    if not county == 'nan':
+        target_county = target_state[ target_state['admin2'] == county]
+    else:
+        target_county = target_state[ target_state['admin2'].isna()]
     target_county = target_county.sort_values(by = 'date')
     # target county will store a dataframe for a given county and in time order
     
@@ -140,15 +143,15 @@ def y_label_generator(state, county, label_type, group_date = 300):
         for i in range(math.floor(num_cuts)):
             if i == 0:
                 index = (i+1)*group_date-1
-                label_list.append(target_county['tot_confirmed'].iloc[index]/group_date)
+                label_list.append(target_county['tot_confirmed'].iloc[index]/county_population)
             elif i <= math.floor(num_cuts) - 1:
                 index = (i+1)*group_date-1
                 label_list.append((target_county['tot_confirmed'].iloc[index]- \
-                                 target_county['tot_confirmed'].iloc[index-group_date])/group_date)
+                                 target_county['tot_confirmed'].iloc[index-group_date])/county_population)
         if math.floor(num_cuts) != num_cuts:
             label_list.append((target_county['tot_confirmed'].iloc[-1] - \
                              target_county['tot_confirmed'].iloc[group_date*math.floor(num_cuts)-1])/ \
-                              (len(target_county)-group_date*math.floor(num_cuts)))
+                              county_population)
             
             
     elif label_type == "deaths_increase_rates": # ask for the increase rate of deaths cut by each group data
@@ -158,15 +161,15 @@ def y_label_generator(state, county, label_type, group_date = 300):
         for i in range(math.floor(num_cuts)):
             if i == 0:
                 index = (i+1)*group_date-1
-                label_list.append(target_county['tot_death'].iloc[index]/group_date)
+                label_list.append(target_county['tot_death'].iloc[index]/county_population)
             elif i <= math.floor(num_cuts) - 1:
                 index = (i+1)*group_date-1
                 label_list.append((target_county['tot_death'].iloc[index]- \
-                                 target_county['tot_death'].iloc[index-group_date])/group_date)
+                                 target_county['tot_death'].iloc[index-group_date])/county_population)
         if math.floor(num_cuts) != num_cuts:
             label_list.append((target_county['tot_death'].iloc[-1] - \
                              target_county['tot_death'].iloc[group_date*math.floor(num_cuts)-1])/ \
-                              (len(target_county)-group_date*math.floor(num_cuts)))
+                              county_population)
       
     
     elif label_type == "seriousness_label_cases": 
