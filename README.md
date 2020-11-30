@@ -1,6 +1,6 @@
 # CS760Final
 
-### Related dataset ###
+# Related dataset #
 1. US County Boundaries (The latitude and location may affect the disease spreading)
 https://public.opendatasoft.com/explore/embed/dataset/us-county-boundaries/table/?disjunctive.statefp&disjunctive.countyfp&disjunctive.name&disjunctive.namelsad&disjunctive.stusab&disjunctive.state_name&sort=-stusab
 
@@ -11,6 +11,6 @@ https://public.opendatasoft.com/explore/embed/dataset/usa-2016-presidential-elec
 https://public.opendatasoft.com/explore/embed/dataset/coronavirus-covid-19-pandemic-usa-counties/table/?disjunctive.province_state&disjunctive.admin2&sort=date
 
 
-### Results ###
+# Results #
 ## NN ##
 1. cases_increase_10: 0.02840063 
