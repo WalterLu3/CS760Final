@@ -9,3 +9,8 @@ https://public.opendatasoft.com/explore/embed/dataset/usa-2016-presidential-elec
 
 3. COVID-19 Pandemic - USA counties
 https://public.opendatasoft.com/explore/embed/dataset/coronavirus-covid-19-pandemic-usa-counties/table/?disjunctive.province_state&disjunctive.admin2&sort=date
+
+
+### Results ###
+## NN ##
+1. cases_increase_10: 0.02840063 
