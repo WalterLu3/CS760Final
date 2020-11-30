@@ -12,7 +12,14 @@ https://public.opendatasoft.com/explore/embed/dataset/coronavirus-covid-19-pande
 
 
 # Results #
-mse = sum( sum( ( y_label_ij - y_label_ij )^2, i = 1 to label_dim ), j = 1 to data_num ) / data_num
+rmse = sqrt( sum( sum( ( y_label_ij - y_label_ij / y_label_ij )^2, i = 1 to label_dim ), j = 1 to data_num ) / data_num / label_dim )
+correct rate
 ## NN ##
-1. cases_increase_10: 0.02840063
-2. cases_increase_5: 0.01449544
+1. cases_increase_10: 0.88281078
+2. cases_increase_5: 0.90947305
+3. cases_increase_1: 50.61628634, non-trainable
+4. cases_seriousness_1: 0.77525842, non-trainable
+5. deaths_increase_10: 0.66714937
+6. deaths_increase_5: 0.73615916
+7. deaths_increase_1: 0.95839941
+8. deaths_seriousness_1: 0.74724908,trainable but not for valid_loss
