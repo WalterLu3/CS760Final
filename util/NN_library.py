@@ -63,7 +63,12 @@ def cut_valid( data_X, data_Y, valid_num ):
 
 
 ## construct DNN model
-def get_DNN_Model( feat_dim, label_dim ):
+def get_DNN_Model( feat_dim, label_dim, problem_type ):
+    
+    if( problem_type == "regression" ):
+        loss_func = sse
+    elif( problem_type == "classification" ):
+        loss_func = 'binary_crossentropy'
     
     model = Sequential()
     model.add( Dense( 256,
@@ -89,7 +94,7 @@ def get_DNN_Model( feat_dim, label_dim ):
     model.summary()
                  
 #    adam = Adam( lr=0.001, decay=1e-6, clipvalue=0.5 )
-    model.compile( loss=sse,
+    model.compile( loss=loss_func,
                    optimizer='adam',
                  )    
     print('DNN model built')
@@ -126,7 +131,7 @@ def train_DNN_model( model, X_train, Y_train, X_valid, Y_valid, model_path, to_l
         hist = model.fit( X_train , Y_train,
                           validation_data=( X_valid, Y_valid ), 
                           epochs=epoch_num, batch_size=batch_size,
-                          verbose=1,
+                          verbose=0,
                           shuffle=True,
         #                      callbacks=[ earlystopping, checkpoint ],
                           callbacks=[ checkpoint ]
