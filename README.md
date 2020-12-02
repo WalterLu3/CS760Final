@@ -14,7 +14,8 @@ https://public.opendatasoft.com/explore/embed/dataset/coronavirus-covid-19-pande
 # Increase Rate Results #
 rmse = sqrt( sum( sum( ( y_label_ij - y_label_ij / y_label_ij )^2, i = 1 to label_dim ), j = 1 to data_num ) / data_num / label_dim )
 correct rate
-MAPE
+Continuous labels' evaluation standard : MAPE
+Binary Classification's evaluation standard : Accuracy
 ## NN ##
 1. cases_increase_10: 0.88281078
 2. cases_increase_5: 0.90947305
@@ -26,22 +27,22 @@ MAPE
 8. deaths_seriousness_1 (classification): 0.74724908,trainable but not for valid_loss
 
 ## Random Forest ##
-1. cases_increase_10: 0.0020570714046789225
-2. cases_increase_5: 0.0036503566204986945
-3. cases_increase_1: 0.012664492404519685
+1. cases_increase_10: 0.0021357080800325145
+2. cases_increase_5: 0.0038593331759570575
+3. cases_increase_1: 0.014728564849270542
 4. cases_seriousness_1 (classification): 
-5. deaths_increase_10: 7.115228389125938e-05
-6. deaths_increase_5: 0.00012156162799185823
-7. deaths_increase_1: 0.00039258050013288624
+5. deaths_increase_10: 4.6659028876153586e-05
+6. deaths_increase_5: 8.310205512667283e-05
+7. deaths_increase_1: 0.0002782352006245808
 8. deaths_seriousness_1 (classification):
 
 ## SVM ##
-1. cases_increase_10: 0.029007918521587205
-2. cases_increase_5: 0.0454246680474594
-3. cases_increase_1: 0.06209782592115588
+1. cases_increase_10: 0.029492560625535333
+2. cases_increase_5: 0.04501633457449545
+3. cases_increase_1: 0.04480892217406902
 4. cases_seriousness_1 (classification): 
-5. deaths_increase_10: 0.000728304645987609
-6. deaths_increase_5: 0.0012325553659813322
-7. deaths_increase_1: 0.002806304550705679
+5. deaths_increase_10: 0.0007445946470889617
+6. deaths_increase_5: 0.0012672066744095131
+7. deaths_increase_1: 0.0030582337692961637
 8. deaths_seriousness_1 (classification):
 
