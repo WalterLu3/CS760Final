@@ -15,7 +15,7 @@ https://public.opendatasoft.com/explore/embed/dataset/coronavirus-covid-19-pande
 rmse = sqrt( sum( sum( ( y_label_ij - y_label_ij / y_label_ij )^2, i = 1 to label_dim ), j = 1 to data_num ) / data_num / label_dim )
 correct rate
 Continuous labels' evaluation standard : MAPE
-Binary Classification's evaluation standard : Accuracy
+Binary Classification's evaluation standard : Cross-Entropy
 ## NN ##
 1. cases_increase_10: 0.88281078
 2. cases_increase_5: 0.90947305
