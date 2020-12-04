@@ -15,7 +15,7 @@ https://public.opendatasoft.com/explore/embed/dataset/coronavirus-covid-19-pande
 rmse = sqrt( sum( sum( ( y_label_ij - y_label_ij / y_label_ij )^2, i = 1 to label_dim ), j = 1 to data_num ) / data_num / label_dim )
 correct rate
 Continuous labels' evaluation standard : MAPE
-Binary Classification's evaluation standard : Cross-Entropy
+Binary Classification's evaluation standard : Accuracy
 ## NN ##
 1. cases_increase_10: 0.88281078
 2. cases_increase_5: 0.90947305
@@ -26,23 +26,23 @@ Binary Classification's evaluation standard : Cross-Entropy
 7. deaths_increase_1: 0.95839941
 8. deaths_seriousness_1 (classification): 0.74724908,trainable but not for valid_loss
 
-## Random Forest ##
+## Random Forest (on testing data) ##
 1. cases_increase_10: 0.0021357080800325145
 2. cases_increase_5: 0.0038593331759570575
 3. cases_increase_1: 0.014728564849270542
-4. cases_seriousness_1 (classification): 
+4. cases_seriousness_1 (classification): 0.861
 5. deaths_increase_10: 4.6659028876153586e-05
 6. deaths_increase_5: 8.310205512667283e-05
 7. deaths_increase_1: 0.0002782352006245808
-8. deaths_seriousness_1 (classification):
+8. deaths_seriousness_1 (classification): 0.833
 
-## SVM ##
+## SVM (on testing data) ##
 1. cases_increase_10: 0.029492560625535333
 2. cases_increase_5: 0.04501633457449545
 3. cases_increase_1: 0.04480892217406902
-4. cases_seriousness_1 (classification): 
+4. cases_seriousness_1 (classification): 0.875
 5. deaths_increase_10: 0.0007445946470889617
 6. deaths_increase_5: 0.0012672066744095131
 7. deaths_increase_1: 0.0030582337692961637
-8. deaths_seriousness_1 (classification):
+8. deaths_seriousness_1 (classification): 0.944
 
