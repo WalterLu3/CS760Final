@@ -13,9 +13,11 @@ https://public.opendatasoft.com/explore/embed/dataset/coronavirus-covid-19-pande
 
 # Increase Rate Results #
 rmse = sqrt( sum( sum( ( y_label_ij - y_label_ij / y_label_ij )^2, i = 1 to label_dim ), j = 1 to data_num ) / data_num / label_dim )
+
 correct rate
 
 Continuous labels' evaluation standard : MAPE (2020/11/30, give up for zero in denominator)
+
 Continuous labels' evaluation standard : MAE (2020/11/30)
 
 Binary Classification's evaluation standard : Accuracy
