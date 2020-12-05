@@ -14,16 +14,18 @@ https://public.opendatasoft.com/explore/embed/dataset/coronavirus-covid-19-pande
 # Increase Rate Results #
 rmse = sqrt( sum( sum( ( y_label_ij - y_label_ij / y_label_ij )^2, i = 1 to label_dim ), j = 1 to data_num ) / data_num / label_dim )
 correct rate
-Continuous labels' evaluation standard : MAPE
+Continuous labels' evaluation standard : MAPE (2020/11/30, give up for zero in denominator)
+Continuous labels' evaluation standard : MAE (2020/11/30)
+
 Binary Classification's evaluation standard : Accuracy
 ## NN ##
-1. cases_increase_10: 0.88281078
-2. cases_increase_5: 0.90947305
-3. cases_increase_1: 50.61628634, non-trainable
+1. cases_increase_10: 0.00163403
+2. cases_increase_5: 0.00297517
+3. cases_increase_1: 0.06507973, non-trainable
 4. cases_seriousness_1 (classification): 0.77525842, non-trainable
-5. deaths_increase_10: 0.66714937
-6. deaths_increase_5: 0.73615916
-7. deaths_increase_1: 0.95839941
+5. deaths_increase_10: 5.577e-05
+6. deaths_increase_5: 9.955e-05
+7. deaths_increase_1: 0.00266079
 8. deaths_seriousness_1 (classification): 0.74724908,trainable but not for valid_loss
 
 ## Random Forest (on testing data) ##
