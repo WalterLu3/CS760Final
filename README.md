@@ -72,14 +72,14 @@ Binary Classification's evaluation standard : Accuracy
 # Results after Feature Selection (We only use top 10 features) #
 
 ## NN ##
-1. cases_increase_10: 
-2. cases_increase_5: 
-3. cases_increase_1: 
-4. cases_seriousness_1 (classification): 
-5. deaths_increase_10: 
-6. deaths_increase_5: 
-7. deaths_increase_1: 
-8. deaths_seriousness_1 (classification):
+1. cases_increase_10: 0.00195233
+2. cases_increase_5: 0.00356637
+3. cases_increase_1: 0.06875696
+4. cases_seriousness_1 (classification): 0.68822941, non-trainable
+5. deaths_increase_10: 5.631e-05
+6. deaths_increase_5: 0.00010109
+7. deaths_increase_1: 0.00251185
+8. deaths_seriousness_1 (classification): 0.74724908
 
 ## Random Forest (on testing data) ##
 1. cases_increase_10: 0.0025085474098432265
