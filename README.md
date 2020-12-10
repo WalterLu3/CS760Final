@@ -23,15 +23,15 @@ Continuous labels' evaluation standard : MAE (2020/11/30)
 Binary Classification's evaluation standard : Accuracy
 
 # Results before Feature Selection #
-## NN ##
-1. cases_increase_10: 0.00163403
-2. cases_increase_5: 0.00297517
-3. cases_increase_1: 0.06507973, non-trainable
-4. cases_seriousness_1 (classification): 0.77525842, non-trainable
-5. deaths_increase_10: 5.577e-05
-6. deaths_increase_5: 9.955e-05
-7. deaths_increase_1: 0.00266079
-8. deaths_seriousness_1 (classification): 0.74724908,trainable but not for valid_loss
+## NN (on testing data) ##
+1. cases_increase_10: 0.00253828
+2. cases_increase_5: 0.00515908
+3. cases_increase_1: 0.04569376, non-trainable
+4. cases_seriousness_1 (classification): 0.69444444
+5. deaths_increase_10: 4.324e-05
+6. deaths_increase_5: 8.881e-05
+7. deaths_increase_1: 0.00063399, non-trainable
+8. deaths_seriousness_1 (classification): 0.84722222
 
 ## Random Forest (on testing data) ##
 1. cases_increase_10: 0.0021357080800325145
@@ -71,15 +71,15 @@ Binary Classification's evaluation standard : Accuracy
 
 # Results after Feature Selection (We only use top 10 features) #
 
-## NN ##
-1. cases_increase_10: 
-2. cases_increase_5: 
-3. cases_increase_1: 
-4. cases_seriousness_1 (classification): 
-5. deaths_increase_10: 
-6. deaths_increase_5: 
-7. deaths_increase_1: 
-8. deaths_seriousness_1 (classification):
+## NN (on testing data) ##
+1. cases_increase_10: 0.00283182
+2. cases_increase_5: 0.00643154
+3. cases_increase_1: 0.04453607, non-trainable
+4. cases_seriousness_1 (classification): 0.75
+5. deaths_increase_10: 4.784e-05
+6. deaths_increase_5: 7.523e-05
+7. deaths_increase_1: 0.00057068, non-trainable
+8. deaths_seriousness_1 (classification): 0.84722222
 
 ## Random Forest (on testing data) ##
 1. cases_increase_10: 0.0025085474098432265
@@ -116,3 +116,6 @@ Binary Classification's evaluation standard : Accuracy
 6. deaths_increase_5: 8.47698810552995e-05
 7. deaths_increase_1: 0.0002588867651615653
 8. NAN
+
+# Report
+https://www.overleaf.com/9576839137qjgrhrxygkbb
