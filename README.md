@@ -47,11 +47,11 @@ Binary Classification's evaluation standard : Accuracy
 1. cases_increase_10: 0.029492560625535333
 2. cases_increase_5: 0.04501633457449545
 3. cases_increase_1: 0.04480892217406902
-4. cases_seriousness_1 (classification): 0.875
+4. cases_seriousness_1 (classification): 0.944
 5. deaths_increase_10: 0.0007445946470889617
 6. deaths_increase_5: 0.0012672066744095131
 7. deaths_increase_1: 0.0030582337692961637
-8. deaths_seriousness_1 (classification): 0.944
+8. deaths_seriousness_1 (classification): 0.861
 
 ## Logtistic Regression (on testing data) ##
 
