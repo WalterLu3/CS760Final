@@ -119,3 +119,14 @@ Binary Classification's evaluation standard : Accuracy
 
 # Report
 https://www.overleaf.com/9576839137qjgrhrxygkbb
+
+# Prediction data in Dan County (before feature selection)
+## NN
+1. cases_increase_10: XX, XX, XX, XX, XX, XX, XX, XX, XX, XX
+2. cases_increase_5: XX, XX, XX, XX, XX
+3. cases_increase_1: XX
+4. cases_seriousness_1: XX
+5. deaths_increase_10: XX, XX, XX, XX, XX, XX, XX, XX, XX, XX
+6. deaths_increase_5: XX, XX, XX, XX, XX
+7. deaths_increase_1: XX
+8. deaths_seriousness_1: XX
