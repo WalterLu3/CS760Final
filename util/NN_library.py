@@ -29,7 +29,7 @@ epoch_num = 100
 batch_size = 64
 
 ## self-defined loss function to magnify the loss during training
-def sse(y_true, y_pred):
+def custom_loss(y_true, y_pred):
     """ sum of sqaured errors. """
 
     # keras.losses.binary_crossentropy gives the mean
@@ -66,7 +66,7 @@ def cut_valid( data_X, data_Y, valid_num ):
 def get_DNN_Model( feat_dim, label_dim, problem_type ):
     
     if( problem_type == "regression" ):
-        loss_func = sse
+        loss_func = custom_loss
     elif( problem_type == "classification" ):
         loss_func = 'binary_crossentropy'
     
@@ -91,7 +91,7 @@ def get_DNN_Model( feat_dim, label_dim, problem_type ):
                       kernel_initializer='normal',
                       kernel_regularizer=regularizers.l2(1e-4)
                     ))
-    model.summary()
+    # model.summary()
                  
 #    adam = Adam( lr=0.001, decay=1e-6, clipvalue=0.5 )
     model.compile( loss=loss_func,
@@ -117,7 +117,7 @@ def PlotTrainingProcess( hist ):
 def train_DNN_model( model, X_train, Y_train, X_valid, Y_valid, model_path, to_load_model ):
         
     if( to_load_model==False ):        
-        model.summary()   
+        # model.summary()   
         
         ## some callbacks
         #    earlystopping = EarlyStopping(monitor='val_acc', patience = 10, verbose=1, mode='max')
@@ -125,7 +125,7 @@ def train_DNN_model( model, X_train, Y_train, X_valid, Y_valid, model_path, to_l
                                       verbose=0,
                                       save_best_only=True,
                                       save_weights_only=True,
-                                      monitor='loss',
+                                      monitor='val_loss',
                                       mode='min'
                                     )
         hist = model.fit( X_train , Y_train,

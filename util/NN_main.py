@@ -5,13 +5,14 @@ Spyder Editor
 This is a temporary script file.
 """
 
-from NN_library import sse, cut_valid, get_DNN_Model, PlotTrainingProcess
+from NN_library import custom_loss, cut_valid, get_DNN_Model, PlotTrainingProcess
 from NN_library import train_DNN_model
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from keras.utils import np_utils
-
+import winsound
+# np.seterr(all='print')
 
 MODEL_NUMBER = 1
 seeds = [ 1234 , 123 , 445 , 2500, 1111 ]
@@ -28,67 +29,33 @@ batch_size = 64
 ########################
 
 ## build label data of confirmed_cases/deaths of increase rates/seriousness
-'''
-########## Old #################
-raw_label_data = pd.read_csv( "label_data.csv" )
 
-id_table = np.array( raw_label_data["Admin_Code"].values )
-cnfrm_case_ttl = np.array( raw_label_data["Total_Confirmed"].values )
-state_name_ttl = raw_label_data["State"].values
-state_cnty_name_ttl = raw_label_data["County"].values
-cnty_id_ttl = raw_label_data["Admin_Code"].values
-
-## check data num
-data_num = 0
-while(1):
-    if( id_table[data_num] < 1e8 ):
-        data_num = data_num + 1
-    else:
-        break
-
-cnty_id, counts = np.unique( id_table[:data_num], return_counts=True )
-
-cnty_num = len( cnty_id )
-date_ttl = counts[0]
-date_width = 10
-
-cnfrm_case_ttl = cnfrm_case_ttl[:data_num].reshape( cnty_num, -1 )
-
-
-
-
-label_data = []
-idx = date_width - 1
-while(1):
-    if( idx > cnfrm_case_ttl.shape[1] ):
-        break
-    elif( idx - date_width < 0 ):
-        label_data.append( cnfrm_case_ttl[:,idx] )
-        idx = idx + date_width
-    else:
-        label_data.append( cnfrm_case_ttl[:,idx] - cnfrm_case_ttl[:,idx-date_width] )
-        idx = idx + date_width
-        
-label_data = np.vstack(label_data).T
-label_data = label_data.astype('float')
-
-FIPS_cnty_name_table = []
-for i in range(cnty_num):
-    FIPS_cnty_name_table.append( [ int(cnty_id_ttl[i*date_ttl]), str(state_name_ttl[i*date_ttl]), str(state_cnty_name_ttl[i*date_ttl]) ] ) 
-    
-del cnfrm_case_ttl, state_name_ttl, state_cnty_name_ttl
-########## Old #################
-'''
-to_load_model = 0
-# label_data_path = "cases_increase_10"
+to_load_model = False
+label_data_path = "cases_increase_10"
 # label_data_path = "cases_increase_5"
 # label_data_path = "cases_increase_1"
 # label_data_path = "cases_seriousness_1"
 # label_data_path = "deaths_increase_10"
 # label_data_path = "deaths_increase_5"
 # label_data_path = "deaths_increase_1"
-label_data_path = "deaths_seriousness_1"
+# label_data_path = "deaths_seriousness_1"
 
+# feat_data_path = "../feature_process/feature_data.csv"
+feat_data_path = "../feature_process/aligned_features_sorted.csv"
+
+model_path = "../models/NN/"+ label_data_path + "(" + str(seeds[MODEL_NUMBER-1]) + ")" 
+
+
+if( "sorted" in feat_data_path ):
+    model_path = model_path + "_featSlct"
+    prdct_data_path = "../results/NN_" + label_data_path + "_featSlct_pridict.csv"
+    training_progress_path = model_path
+    eval_path = "../results/NN_" + label_data_path + "_featSlct_eval"
+
+else:
+    prdct_data_path = "../results/NN_" + label_data_path + "_pridict.csv"
+    training_progress_path = model_path
+    eval_path = "../results/NN_" + label_data_path + "_eval"
 
 if( "seriousness" in label_data_path ):
     problem_type = "classification"
@@ -110,23 +77,43 @@ else:
 
 cnty_num = label_data.shape[0]
 
-raw_feat_data = pd.read_csv( "../feature_process/feature_data.csv" )
-state_name_ttl = raw_feat_data["State"].tolist()
-state_cnty_name_ttl = raw_feat_data["County"].tolist()
-raw_feat_data_value = raw_feat_data.values
-crrspnd_table = []
-crrspnd_idx_table = -1 * np.ones(cnty_num,dtype='int')
-crrspnd_num = 0
-for i in range(cnty_num):
-    key_state = FIPS_cnty_name_table[i][1]
-    key_state_cnty = FIPS_cnty_name_table[i][2]
-    for j in range( len(state_cnty_name_ttl) ):
-        if( key_state in state_name_ttl[j] and key_state_cnty in state_cnty_name_ttl[j] ):
-            crrspnd_idx_table[i] = j
-            crrspnd_table.append( [j, key_state, key_state_cnty ] )
-            crrspnd_num = crrspnd_num + 1
-            break
 
+raw_feat_data = pd.read_csv( feat_data_path )
+    
+if( "sorted" in feat_data_path ):
+    raw_feat_data_value = raw_feat_data.values
+    raw_feat_data_item = raw_feat_data.columns.tolist()
+    feat_FIPS = raw_feat_data_value[:,0]
+    raw_feat_data_value = raw_feat_data_value[:,1:]
+    crrspnd_table = []
+    crrspnd_idx_table = -1 * np.ones(cnty_num,dtype='int')
+    crrspnd_num = 0
+    for i in range(cnty_num):
+        key_FIPS = FIPS_cnty_name_table[i][0]
+        for j in range( len(feat_FIPS) ):
+            if( key_FIPS == feat_FIPS[j] ):
+                crrspnd_idx_table[i] = j
+                crrspnd_table.append( [j, FIPS_cnty_name_table[i][1], FIPS_cnty_name_table[i][2] ] )
+                crrspnd_num = crrspnd_num + 1
+                break
+    
+else:
+    state_name_ttl = raw_feat_data["State"].tolist()
+    state_cnty_name_ttl = raw_feat_data["County"].tolist()
+    raw_feat_data_value = raw_feat_data.values
+    crrspnd_table = []
+    crrspnd_idx_table = -1 * np.ones(cnty_num,dtype='int')
+    crrspnd_num = 0
+    for i in range(cnty_num):
+        key_state = FIPS_cnty_name_table[i][1]
+        key_state_cnty = FIPS_cnty_name_table[i][2]
+        for j in range( len(state_cnty_name_ttl) ):
+            if( key_state in state_name_ttl[j] and key_state_cnty in state_cnty_name_ttl[j] ):
+                crrspnd_idx_table[i] = j
+                crrspnd_table.append( [j, key_state, key_state_cnty ] )
+                crrspnd_num = crrspnd_num + 1
+                break
+    
 feat_data = []
 to_del = []
 for i in range(cnty_num):
@@ -145,13 +132,17 @@ for i in to_del:
 if( problem_type == "classification" ):
     label_data = np_utils.to_categorical( label_data , 2 )
 
+## only pick top 10 features in feat. data
+if( "sorted" in feat_data_path ):
+    feat_data = feat_data[:,:10]
+
 
 ### data pre-processing ###
 cnty_num = len( label_data )
 label_dim = label_data.shape[1]
 feat_dim = feat_data.shape[1]
 
-model_path = "../models/NN/"+ label_data_path + "(" + str(seeds[MODEL_NUMBER-1]) + ")" 
+
 
 # label_data = np.log( label_data + 1e-3 )
 
@@ -170,8 +161,75 @@ nrmlz_feat_data = np.copy( feat_data )
 for i in range(0,feat_data.shape[1]): 
     nrmlz_feat_data[:,i] = ( feat_data[:,i] - min_feat_data[i] ) / ( max_feat_data[i] - min_feat_data[i] + 1e-12 ) 
 
+del feat_data, raw_feat_data, raw_feat_data_value
+del raw_label_data
 
-## Use 10-fold cross validation 
+
+## Cut out testing data ##
+test_data_id = []
+for i in range(cnty_num):
+    if( 'Wisconsin' in FIPS_cnty_name_table[i][1] ):
+        test_data_id.append( i )
+
+label_data_test = np.copy( label_data[ test_data_id, : ] )
+del label_data
+nrmlz_feat_data_test = np.copy( nrmlz_feat_data[ test_data_id, : ] )
+nrmlz_label_data_test = np.copy( nrmlz_label_data[ test_data_id, : ] )
+FIPS_cnty_name_table_test = []
+for i in test_data_id:
+    FIPS_cnty_name_table_test.append( FIPS_cnty_name_table[i] )
+nrmlz_feat_data_train = np.delete( nrmlz_feat_data, test_data_id, axis=0 )   
+nrmlz_label_data_train = np.delete( nrmlz_label_data, test_data_id, axis=0 )   
+test_data_id = sorted( test_data_id, reverse=True )
+for i in test_data_id:
+    del FIPS_cnty_name_table[i]
+FIPS_cnty_name_table_train = FIPS_cnty_name_table
+del nrmlz_feat_data, nrmlz_label_data
+
+train_data_num = len(nrmlz_feat_data_train)
+test_data_num = len(nrmlz_feat_data_test)
+
+
+X_train , Y_train , X_valid , Y_valid = cut_valid( nrmlz_feat_data_train, nrmlz_label_data_train, int(valid_rate*train_data_num) )
+NN_model = get_DNN_Model( feat_dim, label_dim, problem_type )
+NN_model, hist = train_DNN_model( NN_model, X_train, Y_train, X_valid, Y_valid,
+                                  model_path, to_load_model=to_load_model )
+
+if( hist != None ):
+    np.savetxt( training_progress_path + "_loss.csv",
+                np.array( [ hist.history['loss'], hist.history['val_loss'] ] ).T,
+                delimiter="," )        
+
+nrmlz_prdct_data = NN_model.predict( nrmlz_feat_data_test )
+
+## denormalized the predict data and save it
+prdct_data = np.copy( nrmlz_prdct_data )
+for i in range( prdct_data.shape[1] ): 
+    prdct_data[:,i] = nrmlz_prdct_data[:,i] * ( max_label_data[i] - min_label_data[i] ) + min_label_data[i]
+
+np.savetxt( prdct_data_path, prdct_data, delimiter="," )
+
+## calculate the mean absolute error or correct rate ##
+prdct_data = np.loadtxt( prdct_data_path, delimiter="," ).reshape(test_data_num,-1)
+if( problem_type == "classification" ):
+    correct = 0.
+    for j in range( test_data_num ):
+        if( np.argmax( label_data_test[j,:] ) == np.argmax( prdct_data[j,:] ) ):
+            correct = correct + 1
+    eval_test = correct / test_data_num
+    print( "pridict data correct rate: ", np.round( eval_test, 8 ) )
+    
+else:
+    eval_test = np.mean( np.abs( ( prdct_data - label_data_test ) ) )
+    print( "pridict data MAE: ", np.round( eval_test, 8 ) )
+    
+with open( eval_path, 'w') as out_file:
+    out_file.write( str(eval_test) )
+
+winsound.Beep( 400, 500 )
+
+'''
+## Use 5-fold cross validation 
 ### Shuffle
 index_table = np.arange(len(nrmlz_label_data))
 X_and_Y_train_and_ID = np.concatenate( ( nrmlz_feat_data,
@@ -217,7 +275,7 @@ for i in range(K):
                                                X_test, Y_test, model_path + "_" + str(i), to_load_model=to_load_model )
 
     if( hist != None ):
-        np.savetxt( model_path + "_" + str(i) + "_loss.csv",
+        np.savetxt( training_progress_path + "_loss_" + str(i) + ".csv",
                     np.array( [ hist.history['loss'], hist.history['val_loss'] ] ).T,
                     delimiter="," )
     
@@ -239,28 +297,28 @@ Y_prdct = np.vstack( Y_prdct )
 prdct_data = np.copy( Y_prdct )
 for i in range( prdct_data.shape[1] ): 
     prdct_data[:,i] = Y_prdct[:,i] * ( max_label_data[i] - min_label_data[i] ) + min_label_data[i]
-np.savetxt( "../results/NN_" + label_data_path + "_pridict.csv", prdct_data, delimiter="," )
 
-
+np.savetxt( prdct_data_path, prdct_data, delimiter="," )
+'''
+'''
 ## calculate the mean squared error or correct rate ##
-# prdct_data = np.loadtxt( "../results/NN_" + label_data_path + "_pridict.csv", delimiter="," ).reshape(cnty_num,-1)
+prdct_data = np.loadtxt( prdct_data_path, delimiter="," ).reshape(cnty_num,-1)
 if( problem_type == "classification" ):
     correct = 0.
     for j in range( cnty_num ):
         if( np.argmax( label_data[j,:] ) == np.argmax( prdct_data[j,:] ) ):
             correct = correct + 1
-    mse_test = correct / cnty_num
+    eval_test = correct / cnty_num
     
 else:
-    mse_test = np.sum( ( prdct_data - label_data / ( label_data + 1e-10 ) )**2 ) 
-    mse_test = np.sqrt( mse_test / cnty_num / label_dim )
+    eval_test = np.mean( np.abs( ( prdct_data - label_data ) ) )
     
-    
-print( "K-fold's correct rate: ", np.round( mse_test, 8 ) )
-with open( "../results/NN_" + label_data_path + "_rmse", 'w') as out_file:
-    out_file.write( str(mse_test) )
+print( "K-fold's correct rate: ", np.round( eval_test, 8 ) )
+with open( eval_path, 'w') as out_file:
+    out_file.write( str(eval_test) )
+'''
 
-
+'''
 ##########
 ## Test ##
 ##########
@@ -273,7 +331,7 @@ for i in range(10):
         plt.plot( label_data[idx,:] )
         plt.legend(['predict', 'real'], loc='upper left')
         plt.show()
-
+'''
 
 
         
